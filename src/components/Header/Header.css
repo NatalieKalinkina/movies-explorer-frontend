@@ -33,3 +33,28 @@
   border-radius: 3px;
   text-decoration: none;
 }
+
+@media screen and (max-width: 1279px) {
+  .header {
+    padding: 18px 30px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .header {
+    padding: 18px 14px;
+  }
+
+  .header__auth-nav {
+    gap: 14px;
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 16px;
+  }
+
+  .header__signin {
+    width: 54px;
+    height: 26px;
+    padding: 5px 12px;
+  }
+}

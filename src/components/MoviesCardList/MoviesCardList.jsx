@@ -9,6 +9,7 @@ function MoviesCardList() {
       <div className="movies-list__container">
         {movies.map(movie => (
           <MoviesCard
+            key={movie.id}
             name={movie.nameRU}
             image={movie.image}
             duration={movie.duration}
@@ -17,7 +18,7 @@ function MoviesCardList() {
           />
         ))}
       </div>
-      <button class="movies-list__button button">Ещё</button>
+      <button className="movies-list__button button">Ещё</button>
     </section>
   );
 }

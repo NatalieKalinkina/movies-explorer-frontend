@@ -64,3 +64,14 @@
   transform: translateX(20px);
   background-color: #fff;
 }
+
+@media screen and (max-width: 767px) {
+  .filter-checkbox__text {
+    font-size: 11px;
+  }
+
+  .filter-checkbox {
+    gap: 13px;
+    width: 146px;
+  }
+}

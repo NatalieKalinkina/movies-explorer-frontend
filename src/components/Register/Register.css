@@ -114,3 +114,47 @@
   color: #4285f4;
   text-decoration: none;
 }
+
+@media screen and (max-width: 1279px) {
+  .register {
+    padding: 232px 0;
+  }
+
+  .register__signin {
+    gap: 6px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .register {
+    width: 260px;
+    padding: 56px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .register__container {
+    width: 100%;
+  }
+
+  .register__container {
+    margin-top: 47px;
+  }
+
+  .register__title {
+    margin-bottom: 80px;
+    text-align: center;
+  }
+
+  .register__submit-button {
+    padding: 15px 0 15px;
+    margin: 155px auto 14px;
+    font-size: 12px;
+  }
+
+  .register__signin {
+    gap: 7px;
+    font-size: 12px;
+  }
+}

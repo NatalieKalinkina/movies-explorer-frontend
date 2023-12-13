@@ -9,22 +9,25 @@ import { savedMovies } from '../../utils/constants';
 
 function SavedMovies() {
   return (
-    <section className="movies saved-movies">
-      <SearchForm />
-      <div className="movies-list">
-        <div className="movies-list__container">
-          {savedMovies.map(movie => (
-            <MoviesCard
-              name={movie.nameRU}
-              image={movie.image}
-              duration={movie.duration}
-              possibleToDelete={movie.saved}
-            />
-          ))}
+    <>
+      <section className="movies saved-movies">
+        <SearchForm />
+        <div className="movies-list">
+          <div className="movies-list__container">
+            {savedMovies.map(movie => (
+              <MoviesCard
+                key={movie.id}
+                name={movie.nameRU}
+                image={movie.image}
+                duration={movie.duration}
+                possibleToDelete={movie.saved}
+              />
+            ))}
+          </div>
         </div>
-      </div>
+      </section>
       <Footer />
-    </section>
+    </>
   );
 }
 

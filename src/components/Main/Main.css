@@ -2,3 +2,24 @@
   color: #fff;
   width: 100%;
 }
+
+.main__section-title {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  font-size: 22px;
+  letter-spacing: -0.88px;
+  font-weight: 400;
+  line-height: normal;
+  padding: 0 0 23px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #dadada;
+}
+
+@media screen and (max-width: 767px) {
+  .main__section-title {
+    font-size: 18px;
+    letter-spacing: -0.72px;
+    padding: 0 0 28px;
+    border-bottom: 1px solid #dadada;
+  }
+}

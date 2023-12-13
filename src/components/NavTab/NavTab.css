@@ -20,5 +20,18 @@
   font-size: 12px;
   line-height: 16px;
   font-weight: 500;
-  text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .navtab {
+    gap: 6px;
+  }
+
+  .navtab__item {
+    width: 82px;
+    height: 26px;
+    padding: 5px 0;
+    border-radius: 6px;
+    font-size: 10px;
+  }
 }

@@ -34,3 +34,20 @@
   background-color: transparent;
   border: 0;
 }
+
+@media screen and (max-width: 767px) {
+  .not-found__title {
+    font-size: 80px;
+    margin: 329px auto 10px;
+  }
+
+  .not-found__subtitle {
+    font-size: 12px;
+    margin: 0 auto 284px;
+  }
+
+  .not-found__go-back {
+    font-size: 12px;
+    margin: 0 auto 30px;
+  }
+}

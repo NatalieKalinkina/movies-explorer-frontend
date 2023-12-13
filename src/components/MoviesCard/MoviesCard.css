@@ -82,3 +82,46 @@
   box-sizing: border-box;
   text-align: center;
 }
+
+.movies-card__image {
+  width: 100%;
+}
+
+@media screen and (max-width: 1279px) {
+  .movies-card__caption {
+    gap: 37px;
+    padding: 22px 0 0;
+  }
+
+  .movies-card__name {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  .movies-card__duration {
+    line-height: 10px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .movies-card__save-button {
+    right: 10px;
+    top: 10px;
+  }
+
+  .movies-card__icon {
+    right: 10px;
+    top: 10px;
+  }
+
+  .movies-card__caption {
+    padding: 14px 0 0;
+    gap: 8px;
+  }
+
+  .movies-card__name {
+    font-size: 12px;
+    width: 240px;
+  }
+}

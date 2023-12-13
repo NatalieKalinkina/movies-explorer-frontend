@@ -71,3 +71,43 @@
   margin-top: 15px;
   text-decoration: none;
 }
+
+@media screen and (max-width: 1279px) {
+  .profile__container {
+    padding: 230px 30px 269px;
+  }
+
+  .profile__title {
+    margin-bottom: 80px;
+  }
+
+  .profile__fieldset:last-of-type {
+    margin-bottom: 190px;
+  }
+
+  .profile__sign-out-button {
+    margin-top: 16px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .profile__container {
+    padding: 65px 0 40px;
+  }
+
+  .profile__title {
+    margin-bottom: 61px;
+  }
+
+  .profile__form {
+    width: 260px;
+  }
+
+  .profile__fieldset:last-of-type {
+    margin-bottom: 360px;
+  }
+
+  .profile__button {
+    font-size: 12px;
+  }
+}

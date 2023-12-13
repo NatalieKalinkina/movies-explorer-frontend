@@ -20,3 +20,33 @@
   text-align: center;
   letter-spacing: -2px;
 }
+
+@media screen and (max-width: 1279px) {
+  .promo {
+    width: 94.792%;
+    padding: 350px 50px 30px;
+    margin: 20px auto 90px;
+  }
+
+  .promo__title {
+    font-size: 40px;
+    line-height: 52px;
+    margin-bottom: 314px;
+    letter-spacing: -1.6px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .promo {
+    width: 91.25%;
+    padding: 220px 0px 17px;
+    margin: 14px auto 70px;
+  }
+
+  .promo__title {
+    font-size: 29px;
+    line-height: 37px;
+    margin-bottom: 212px;
+    letter-spacing: -1.16px;
+  }
+}
