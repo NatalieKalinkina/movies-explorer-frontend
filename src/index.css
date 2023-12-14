@@ -1,0 +1,14 @@
+@import url(./vendor/normalize.css);
+@import url(./vendor/fonts/fonts.css);
+
+body {
+  background-color: #202020;
+}
+
+.link:hover {
+  opacity: 0.7;
+}
+
+.button:hover {
+  opacity: 0.8;
+}
