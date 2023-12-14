@@ -6,7 +6,7 @@ function FilterCheckbox() {
     <div className="filter-checkbox">
       <label className="filter-checkbox__label">
         <input type="checkbox" className="filter-checkbox__input" />
-        <div className="filter-checkbox__switch"></div>
+        <span className="filter-checkbox__switch"></span>
       </label>
       <p className="filter-checkbox__text">Короткометражки</p>
     </div>

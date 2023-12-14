@@ -20,7 +20,7 @@ function Register() {
   };
 
   return (
-    <section className="register">
+    <main className="register">
       <Logo />
       <div className="register__container">
         <h2 className="register__title">Добро пожаловать!</h2>
@@ -84,7 +84,7 @@ function Register() {
               </p>
             )}
           </div>
-          <label htmlFor="passord" className="register__label">
+          <label htmlFor="password" className="register__label">
             Пароль
           </label>
           <input
@@ -120,7 +120,7 @@ function Register() {
           </Link>
         </div>
       </div>
-    </section>
+    </main>
   );
 }
 

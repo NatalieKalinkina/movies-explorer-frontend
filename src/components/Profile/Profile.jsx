@@ -24,7 +24,7 @@ function Profile() {
   }
 
   return (
-    <section className="profile">
+    <main className="profile">
       <div className="profile__container">
         <h2 className="profile__title"> Привет, {userName}!</h2>
         <form
@@ -76,7 +76,7 @@ function Profile() {
           </Link>
         </form>
       </div>
-    </section>
+    </main>
   );
 }
 

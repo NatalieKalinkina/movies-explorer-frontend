@@ -20,7 +20,7 @@ function Login() {
   };
 
   return (
-    <section className="login">
+    <main className="login">
       <Logo />
       <div className="login__container">
         <h2 className="login__title">Рады видеть!</h2>
@@ -53,7 +53,7 @@ function Login() {
               <p class="login__input-error">{errors?.email?.message || 'Что-то пошло не так...'}</p>
             )}
           </div>
-          <label htmlFor="passord" className="login__label">
+          <label htmlFor="password" className="login__label">
             Пароль
           </label>
           <input
@@ -89,7 +89,7 @@ function Login() {
           </Link>
         </div>
       </div>
-    </section>
+    </main>
   );
 }
 

@@ -10,7 +10,7 @@ import { savedMovies } from '../../utils/constants';
 function SavedMovies() {
   return (
     <>
-      <section className="movies saved-movies">
+      <main className="movies saved-movies">
         <SearchForm />
         <div className="movies-list">
           <div className="movies-list__container">
@@ -25,7 +25,7 @@ function SavedMovies() {
             ))}
           </div>
         </div>
-      </section>
+      </main>
       <Footer />
     </>
   );
