@@ -1,23 +1,30 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { useFormWithValidation } from '../../hooks/useFormWithValidation';
+import { mainApi } from '../../utils/MainApi';
 import Logo from '../Logo/Logo';
 import './Login.css';
 
-function Login() {
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-    reset
-  } = useForm({
-    mode: 'onBlur'
-  });
+function Login({ onLogin }) {
+  const { values, handleChange, errors, isValid } = useFormWithValidation();
 
-  const onSubmit = data => {
-    console.log('данные отправлены');
-    reset();
-  };
+  const navigate = useNavigate();
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    if (!values.email || !values.password) {
+      return;
+    }
+    mainApi
+      .authorize(values.email, values.password)
+      .then(data => {
+        if (data.token) {
+          onLogin(values.email, values.password);
+          navigate('/movies', { replace: true });
+        }
+      })
+      .catch(console.error);
+  }
 
   return (
     <main className="login">
@@ -29,7 +36,7 @@ function Login() {
           autoComplete="off"
           id="login_form-edit"
           noValidate
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit}
         >
           <label htmlFor="email" className="login__label">
             E-mail
@@ -39,19 +46,13 @@ function Login() {
             className={`login__input ${errors?.email && 'login__input_type_error'}`}
             name="email"
             id="email"
+            required
             placeholder="Ваш e-mail"
-            {...register('email', {
-              required: 'Поле обязательно к заполнению',
-              pattern: {
-                value: /[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]/,
-                message: 'Адрес электронной почты должен содержать символы "@" и "."'
-              }
-            })}
+            value={values.email || ''}
+            onChange={handleChange}
           />
           <div className="login__input-error-container">
-            {errors?.email && (
-              <p class="login__input-error">{errors?.email?.message || 'Что-то пошло не так...'}</p>
-            )}
+            {errors?.email && <p className="login__input-error">{errors?.email}</p>}
           </div>
           <label htmlFor="password" className="login__label">
             Пароль
@@ -60,18 +61,14 @@ function Login() {
             type="password"
             className={`login__input ${errors?.password && 'login__input_type_error'}`}
             name="password"
+            required
             id="password"
             placeholder="Ваш пароль"
-            {...register('password', {
-              required: 'Поле обязательно к заполнению'
-            })}
+            value={values.password || ''}
+            onChange={handleChange}
           />
           <div className="login__input-error-container">
-            {errors?.password && (
-              <p class="login__input-error">
-                {errors?.password?.message || 'Что-то пошло не так...'}
-              </p>
-            )}
+            {errors?.password && <p className="login__input-error">{errors?.password}</p>}
           </div>
           <button
             type="submit"

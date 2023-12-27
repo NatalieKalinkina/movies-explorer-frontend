@@ -5,25 +5,77 @@ import Footer from '../Footer/Footer';
 import '../Movies/Movies.css';
 import '../MoviesCardList/MoviesCardList.css';
 import './SavedMovies.css';
-import { savedMovies } from '../../utils/constants';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function SavedMovies() {
+function SavedMovies({ savedMovies, onMovieDelete, moviesForRender, setMoviesForRender }) {
+  const [checkedCheckbox, setCheckedCheckbox] = React.useState(false);
+  const [searchMessage, setSearchMessage] = React.useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setMoviesForRender(savedMovies);
+  }, [navigate]);
+
+  function changeCheckbox() {
+    setCheckedCheckbox(!checkedCheckbox);
+    let foundSavedMovies = JSON.parse(localStorage.getItem('moviesForRender'));
+    if (!foundSavedMovies) {
+      foundSavedMovies = savedMovies;
+    }
+    if (checkedCheckbox === false) {
+      const filteredSavedMovies = foundSavedMovies.filter(movie => movie.duration < 40);
+      setMoviesForRender(filteredSavedMovies);
+    } else {
+      setMoviesForRender(foundSavedMovies);
+    }
+  }
+  const onSearch = searchQuery => {
+    setCheckedCheckbox(false);
+    const searchResult = savedMovies.filter(
+      movie =>
+        movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        movie.nameEN.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    if (searchResult.length === 0) {
+      setSearchMessage('Фильмов не найдено');
+    }
+    setMoviesForRender(searchResult);
+    localStorage.setItem('moviesForRender', JSON.stringify(searchResult));
+  };
+
   return (
     <>
       <main className="movies saved-movies">
-        <SearchForm />
+        <SearchForm
+          onSearch={onSearch}
+          checkedCheckbox={checkedCheckbox}
+          changeCheckbox={changeCheckbox}
+        />
         <div className="movies-list">
           <div className="movies-list__container">
-            {savedMovies.map(movie => (
+            {moviesForRender.map(movie => (
               <MoviesCard
-                key={movie.id}
+                key={movie.movieId}
+                movie={movie}
                 name={movie.nameRU}
                 image={movie.image}
                 duration={movie.duration}
-                possibleToDelete={movie.saved}
+                saved={movie.saved}
+                country={movie.country}
+                director={movie.director}
+                year={movie.year}
+                description={movie.description}
+                trailerLink={movie.trailerLink}
+                nameEN={movie.nameEN}
+                thumbnail={movie.thumbnail}
+                movieId={movie.movieId}
+                onMovieDelete={onMovieDelete}
+                savedMovies={savedMovies}
               />
             ))}
           </div>
+          <p className="movies__search-message">{searchMessage}</p>
         </div>
       </main>
       <Footer />
