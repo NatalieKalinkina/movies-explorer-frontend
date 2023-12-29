@@ -26,11 +26,11 @@ function Login({ onLogin, errorMessage, setErrorMessage }) {
       .catch((err) => {
         if (err === 'Ошибка: 401') {
           setErrorMessage('Вы ввели неправильный логин или пароль.');
-          } else if (err === 'Ошибка: 500') {
-            setErrorMessage('На сервере произошла ошибка.');
-          } else {
-            setErrorMessage(err)
-          }
+        } else if (err === 'Ошибка: 500') {
+          setErrorMessage('На сервере произошла ошибка.');
+        } else {
+          setErrorMessage(err)
+        }
       });
   }
 
@@ -54,6 +54,7 @@ function Login({ onLogin, errorMessage, setErrorMessage }) {
             className={`login__input ${errors?.email && 'login__input_type_error'}`}
             name="email"
             id="email"
+            pattern="^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$"
             required
             placeholder="Ваш e-mail"
             value={values.email || ''}
@@ -87,10 +88,10 @@ function Login({ onLogin, errorMessage, setErrorMessage }) {
             Войти
           </button>
         </form>
-        {errorMessage && 
-        <div className='login__api-error-container'>
-          <p className="login__api-error">{errorMessage}</p>
-        </div>
+        {errorMessage &&
+          <div className='login__api-error-container'>
+            <p className="login__api-error">{errorMessage}</p>
+          </div>
         }
         <div className="login__signup">
           <p className="login__signup-text">Ещё не зарегистрированы?&nbsp;</p>

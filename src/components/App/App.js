@@ -50,9 +50,10 @@ function App() {
           });
         })
         .catch(() => {
-          setSearchMessage('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
+          setSearchMessage(
+            'Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз'
+          );
         });
-        
     }
   }, [token, navigate]);
 
@@ -69,12 +70,12 @@ function App() {
           setErrorMessage('Произошла ошибка при регистрации');
         }
       })
-      .catch((err) => {
+      .catch(err => {
         if (err === 'Ошибка: 409') {
           setErrorMessage('Пользователь с таким email уже существует.');
-          } else {
-            setErrorMessage('На сервере произошла ошибка.');
-          } 
+        } else {
+          setErrorMessage('На сервере произошла ошибка.');
+        }
       });
   };
 
@@ -91,6 +92,7 @@ function App() {
     localStorage.removeItem('checkbox');
     localStorage.removeItem('filteredMovies');
     localStorage.removeItem('moviesForRender');
+    localStorage.removeItem('isMoreMovies');
     setLoggedIn(false);
     navigate('/');
   };
@@ -100,16 +102,16 @@ function App() {
       .postUserInfo(data)
       .then(user => {
         setCurrentUser(user);
-        setErrorMessage('')
+        setErrorMessage('');
       })
-      .catch((err) => {
+      .catch(err => {
         if (err === 'Ошибка: 409') {
           setErrorMessage('Пользователь с таким email уже существует.');
-          } else if (err === 'Ошибка: 500') {
-            setErrorMessage('На сервере произошла ошибка.');
-          } else {
-            setErrorMessage('При обновлении профиля произошла ошибка.')
-          }
+        } else if (err === 'Ошибка: 500') {
+          setErrorMessage('На сервере произошла ошибка.');
+        } else {
+          setErrorMessage('При обновлении профиля произошла ошибка.');
+        }
       });
   }
 
@@ -151,7 +153,12 @@ function App() {
             path="/movies"
             element={
               <ProtectedRoute loggedIn={loggedIn}>
-                <Movies onMovieSave={handleMovieSave} savedMovies={savedMovies} searchMessage={searchMessage} setSearchMessage={setSearchMessage}/>
+                <Movies
+                  onMovieSave={handleMovieSave}
+                  savedMovies={savedMovies}
+                  searchMessage={searchMessage}
+                  setSearchMessage={setSearchMessage}
+                />
               </ProtectedRoute>
             }
           />
@@ -171,18 +178,36 @@ function App() {
           <Route
             path="/signup"
             element={
-              loggedIn === true ? <Navigate to="/" replace /> : <Register onRegister={onRegister} errorMessage={errorMessage}/>
+              loggedIn === true ? (
+                <Navigate to="/" replace />
+              ) : (
+                <Register onRegister={onRegister} errorMessage={errorMessage} />
+              )
             }
           />
           <Route
             path="/signin"
-            element={loggedIn === true ? <Navigate to="/" replace /> : <Login onLogin={onLogin} errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>}
+            element={
+              loggedIn === true ? (
+                <Navigate to="/" replace />
+              ) : (
+                <Login
+                  onLogin={onLogin}
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                />
+              )
+            }
           />
           <Route
             path="/profile"
             element={
               <ProtectedRoute loggedIn={loggedIn}>
-                <Profile onSignOut={onSignOut} onUpdateUser={handleUpdateUser} errorMessage={errorMessage}/>
+                <Profile
+                  onSignOut={onSignOut}
+                  onUpdateUser={handleUpdateUser}
+                  errorMessage={errorMessage}
+                />
               </ProtectedRoute>
             }
           />

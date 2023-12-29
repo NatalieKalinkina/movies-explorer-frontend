@@ -51,6 +51,7 @@ function Register({ onRegister, errorMessage }) {
             className={`register__input ${errors?.email && 'register__input_type_error'}`}
             name="email"
             id="email"
+            pattern="^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$"
             placeholder="Ваш e-mail"
             required
             value={values.email || ''}
@@ -84,10 +85,10 @@ function Register({ onRegister, errorMessage }) {
             Зарегистрироваться
           </button>
         </form>
-        {errorMessage && 
-        <div className='register__api-error-container'>
-          <p className="register__api-error">{errorMessage}</p>
-        </div>
+        {errorMessage &&
+          <div className='register__api-error-container'>
+            <p className="register__api-error">{errorMessage}</p>
+          </div>
         }
         <div className="register__signin">
           <p className="register__signin-text">Уже зарегистрированы?&nbsp;</p>
