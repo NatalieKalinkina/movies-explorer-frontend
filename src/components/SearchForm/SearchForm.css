@@ -3,6 +3,7 @@
   padding: 78px 0 40px;
   box-sizing: border-box;
   border-bottom: 1px solid #424242;
+  position: relative;
 }
 
 .search-form__form {
@@ -12,6 +13,18 @@
   gap: 10px;
   align-items: center;
   margin-bottom: 28px;
+}
+
+.search-form__input-error {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  color: #ee3465;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: normal;
+  transition: 0.3s;
+  position: absolute;
+  top: 135px;
 }
 
 .search-form__input {
@@ -53,6 +66,10 @@
   background-size: 44px 44px;
   border: 0;
   background-color: transparent;
+}
+
+.search-form__submit-button:disabled {
+  opacity: 0.5;
 }
 
 @media screen and (max-width: 1279px) {
