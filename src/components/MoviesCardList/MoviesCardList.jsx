@@ -2,11 +2,11 @@ import React from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 
-function MoviesCardList({ foundMovies, saved, onMovieSave, savedMovies }) {
+function MoviesCardList({ moviesForRender, saved, onMovieSave, savedMovies, isMoreMovies, onMoreMoviesOpen }) {
   return (
     <section className="movies-list">
       <div className="movies-list__container">
-        {foundMovies.map(movie => (
+        {moviesForRender.map(movie => (
           <MoviesCard
             key={movie.id}
             movie={movie}
@@ -27,7 +27,7 @@ function MoviesCardList({ foundMovies, saved, onMovieSave, savedMovies }) {
           />
         ))}
       </div>
-      <button className="movies-list__button button">Ещё</button>
+      {isMoreMovies && (<button className="movies-list__button button" onClick={onMoreMoviesOpen}>Ещё</button>)}
     </section>
   );
 }

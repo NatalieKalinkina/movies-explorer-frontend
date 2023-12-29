@@ -107,6 +107,12 @@
     border: 0;
   }
 
+  .header-for-user__menu {
+    flex-direction: column;
+    gap: 30px;
+    align-items: center;
+  }
+
   .header-for-user__menu-item {
     font-size: 18px;
     font-weight: 500;

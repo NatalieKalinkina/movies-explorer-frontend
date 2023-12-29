@@ -5,7 +5,7 @@ import { mainApi } from '../../utils/MainApi';
 import Logo from '../Logo/Logo';
 import './Login.css';
 
-function Login({ onLogin }) {
+function Login({ onLogin, errorMessage, setErrorMessage }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
 
   const navigate = useNavigate();
@@ -23,7 +23,15 @@ function Login({ onLogin }) {
           navigate('/movies', { replace: true });
         }
       })
-      .catch(console.error);
+      .catch((err) => {
+        if (err === 'Ошибка: 401') {
+          setErrorMessage('Вы ввели неправильный логин или пароль.');
+          } else if (err === 'Ошибка: 500') {
+            setErrorMessage('На сервере произошла ошибка.');
+          } else {
+            setErrorMessage(err)
+          }
+      });
   }
 
   return (
@@ -79,6 +87,11 @@ function Login({ onLogin }) {
             Войти
           </button>
         </form>
+        {errorMessage && 
+        <div className='login__api-error-container'>
+          <p className="login__api-error">{errorMessage}</p>
+        </div>
+        }
         <div className="login__signup">
           <p className="login__signup-text">Ещё не зарегистрированы?&nbsp;</p>
           <Link to="/signup" className="login__signup-link link">

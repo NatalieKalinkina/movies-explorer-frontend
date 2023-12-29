@@ -5,7 +5,7 @@ import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import './Profile.css';
 import '../Login/Login.css';
 
-function Profile({ onSignOut, onUpdateUser }) {
+function Profile({ onSignOut, onUpdateUser, errorMessage }) {
   const { values, handleChange, errors, isValid, setIsValid, resetForm } = useFormWithValidation();
   const currentUser = React.useContext(CurrentUserContext);
   const [name, setName] = React.useState(currentUser.name);
@@ -68,6 +68,7 @@ function Profile({ onSignOut, onUpdateUser }) {
             </label>
             <input
               type="email"
+              pattern="^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$"
               className="profile__input profile__input_type_email"
               name="email"
               id="email"
@@ -87,6 +88,7 @@ function Profile({ onSignOut, onUpdateUser }) {
           >
             Редактировать
           </button>
+
           <Link
             to="/"
             className="profile__button profile__sign-out-button link"
@@ -95,6 +97,11 @@ function Profile({ onSignOut, onUpdateUser }) {
             Выйти из аккаунта
           </Link>
         </form>
+        {errorMessage &&
+          <div className='profile__api-error-container'>
+            <p className="profile__api-error">{errorMessage}</p>
+          </div>
+        }
       </div>
     </main>
   );

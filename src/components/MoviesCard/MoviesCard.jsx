@@ -35,6 +35,7 @@ function MoviesCard({
   }
 
   return (
+    
     <section className="movies-card">
       <a href={trailerLink} target="_blank" rel="noreferrer">
         <img src={image} className="movies-card__image" alt={name} />
@@ -63,6 +64,7 @@ function MoviesCard({
         <p className="movies-card__duration">{getDuration(duration)}</p>
       </div>
     </section>
+  
   );
 }
 

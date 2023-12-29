@@ -13,13 +13,14 @@ import Profile from '../Profile/Profile';
 import PageNotFound from '../PageNotFound/PageNotFound';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import { mainApi } from '../../utils/MainApi.js';
-// import ErrorToolTip from '../ErrorToolTip/ErrorToolTip';
 
 function App() {
   const [loggedIn, setLoggedIn] = React.useState(false);
   const [currentUser, setCurrentUser] = React.useState({});
   const [savedMovies, setSavedMovies] = React.useState([]);
-  const [moviesForRender, setMoviesForRender] = React.useState(savedMovies);
+  const [savedMoviesForRender, setSavedMoviesForRender] = React.useState(savedMovies);
+  const [errorMessage, setErrorMessage] = React.useState('');
+  const [searchMessage, setSearchMessage] = React.useState('');
 
   const navigate = useNavigate();
   const token = localStorage.getItem('jwt');
@@ -42,12 +43,16 @@ function App() {
       mainApi
         .checkToken(token)
         .then(() => {
+          setSearchMessage('');
           mainApi.getSavedMovies().then(data => {
             setSavedMovies(data.movies);
-            setMoviesForRender(data.movies);
+            setSavedMoviesForRender(data.movies);
           });
         })
-        .catch(err => console.error(err));
+        .catch(() => {
+          setSearchMessage('Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз')
+        });
+        
     }
   }, [token, navigate]);
 
@@ -61,11 +66,15 @@ function App() {
           setLoggedIn(true);
           mainApi.authorize(res.email, userPassword);
         } else {
-          console.log('Произошла ошибка при регистрации');
+          setErrorMessage('Произошла ошибка при регистрации');
         }
       })
-      .catch(err => {
-        console.error('Ошибка запроса', err);
+      .catch((err) => {
+        if (err === 'Ошибка: 409') {
+          setErrorMessage('Пользователь с таким email уже существует.');
+          } else {
+            setErrorMessage('На сервере произошла ошибка.');
+          } 
       });
   };
 
@@ -91,13 +100,22 @@ function App() {
       .postUserInfo(data)
       .then(user => {
         setCurrentUser(user);
+        setErrorMessage('')
       })
-      .catch(err => console.error(err));
+      .catch((err) => {
+        if (err === 'Ошибка: 409') {
+          setErrorMessage('Пользователь с таким email уже существует.');
+          } else if (err === 'Ошибка: 500') {
+            setErrorMessage('На сервере произошла ошибка.');
+          } else {
+            setErrorMessage('При обновлении профиля произошла ошибка.')
+          }
+      });
   }
 
   function handleMovieSave(movie) {
     mainApi.saveMovie(movie).then(savedMovie => {
-      setMoviesForRender([...savedMovies, savedMovie]);
+      setSavedMoviesForRender([...savedMovies, savedMovie]);
       setSavedMovies([...savedMovies, savedMovie]);
     });
   }
@@ -106,7 +124,7 @@ function App() {
     mainApi
       .deleteSavedMovie(movie._id)
       .then(() => {
-        setMoviesForRender(state => state.filter(m => m._id !== movie._id));
+        setSavedMoviesForRender(state => state.filter(m => m._id !== movie._id));
         setSavedMovies(state => state.filter(m => m._id !== movie._id));
       })
       .catch(err => console.error(err));
@@ -133,7 +151,7 @@ function App() {
             path="/movies"
             element={
               <ProtectedRoute loggedIn={loggedIn}>
-                <Movies onMovieSave={handleMovieSave} savedMovies={savedMovies} />
+                <Movies onMovieSave={handleMovieSave} savedMovies={savedMovies} searchMessage={searchMessage} setSearchMessage={setSearchMessage}/>
               </ProtectedRoute>
             }
           />
@@ -143,8 +161,8 @@ function App() {
               <ProtectedRoute loggedIn={loggedIn}>
                 <SavedMovies
                   savedMovies={savedMovies}
-                  moviesForRender={moviesForRender}
-                  setMoviesForRender={setMoviesForRender}
+                  savedMoviesForRender={savedMoviesForRender}
+                  setSavedMoviesForRender={setSavedMoviesForRender}
                   onMovieDelete={handleMovieDelete}
                 />
               </ProtectedRoute>
@@ -153,24 +171,23 @@ function App() {
           <Route
             path="/signup"
             element={
-              loggedIn === true ? <Navigate to="/" replace /> : <Register onRegister={onRegister} />
+              loggedIn === true ? <Navigate to="/" replace /> : <Register onRegister={onRegister} errorMessage={errorMessage}/>
             }
           />
           <Route
             path="/signin"
-            element={loggedIn === true ? <Navigate to="/" replace /> : <Login onLogin={onLogin} />}
+            element={loggedIn === true ? <Navigate to="/" replace /> : <Login onLogin={onLogin} errorMessage={errorMessage} setErrorMessage={setErrorMessage}/>}
           />
           <Route
             path="/profile"
             element={
               <ProtectedRoute loggedIn={loggedIn}>
-                <Profile onSignOut={onSignOut} onUpdateUser={handleUpdateUser} />
+                <Profile onSignOut={onSignOut} onUpdateUser={handleUpdateUser} errorMessage={errorMessage}/>
               </ProtectedRoute>
             }
           />
           <Route path="*" element={<PageNotFound />} />
         </Routes>
-        {/* <ErrorToolTip /> */}
       </div>
     </CurrentUserContext.Provider>
   );

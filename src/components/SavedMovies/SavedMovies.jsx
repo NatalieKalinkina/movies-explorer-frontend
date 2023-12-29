@@ -8,26 +8,26 @@ import './SavedMovies.css';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-function SavedMovies({ savedMovies, onMovieDelete, moviesForRender, setMoviesForRender }) {
+function SavedMovies({ savedMovies, onMovieDelete, savedMoviesForRender, setSavedMoviesForRender }) {
   const [checkedCheckbox, setCheckedCheckbox] = React.useState(false);
   const [searchMessage, setSearchMessage] = React.useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
-    setMoviesForRender(savedMovies);
+    setSavedMoviesForRender(savedMovies);
   }, [navigate]);
 
   function changeCheckbox() {
     setCheckedCheckbox(!checkedCheckbox);
-    let foundSavedMovies = JSON.parse(localStorage.getItem('moviesForRender'));
+    let foundSavedMovies = JSON.parse(localStorage.getItem('SavedMoviesForRender'));
     if (!foundSavedMovies) {
       foundSavedMovies = savedMovies;
     }
     if (checkedCheckbox === false) {
       const filteredSavedMovies = foundSavedMovies.filter(movie => movie.duration < 40);
-      setMoviesForRender(filteredSavedMovies);
+      setSavedMoviesForRender(filteredSavedMovies);
     } else {
-      setMoviesForRender(foundSavedMovies);
+      setSavedMoviesForRender(foundSavedMovies);
     }
   }
   const onSearch = searchQuery => {
@@ -40,8 +40,8 @@ function SavedMovies({ savedMovies, onMovieDelete, moviesForRender, setMoviesFor
     if (searchResult.length === 0) {
       setSearchMessage('Фильмов не найдено');
     }
-    setMoviesForRender(searchResult);
-    localStorage.setItem('moviesForRender', JSON.stringify(searchResult));
+    setSavedMoviesForRender(searchResult);
+    localStorage.setItem('SavedMoviesForRender', JSON.stringify(searchResult));
   };
 
   return (
@@ -54,7 +54,7 @@ function SavedMovies({ savedMovies, onMovieDelete, moviesForRender, setMoviesFor
         />
         <div className="movies-list">
           <div className="movies-list__container">
-            {moviesForRender.map(movie => (
+            {savedMoviesForRender.map(movie => (
               <MoviesCard
                 key={movie.movieId}
                 movie={movie}

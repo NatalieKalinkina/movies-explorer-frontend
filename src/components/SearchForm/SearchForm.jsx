@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 function SearchForm({ onSearch, lastSearchQuery, changeCheckbox, checkedCheckbox }) {
   const [formValue, setFormValue] = React.useState('');
+  const [isEmpty, setIsEmpty] = React.useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,6 +15,7 @@ function SearchForm({ onSearch, lastSearchQuery, changeCheckbox, checkedCheckbox
   }, [lastSearchQuery, navigate, setFormValue]);
 
   function handleChange(evt) {
+    setIsEmpty(false);
     setFormValue('');
     const { name, value } = evt.target;
     setFormValue({
@@ -24,12 +26,17 @@ function SearchForm({ onSearch, lastSearchQuery, changeCheckbox, checkedCheckbox
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    onSearch(formValue.text);
+       if (!formValue.text) {
+      setIsEmpty(true)
+    } else {
+      setIsEmpty(false);
+      onSearch(formValue.text)
+    }
   }
 
   return (
     <section className="search-form">
-      <form className="search-form__form" onSubmit={handleSubmit}>
+      <form className="search-form__form" onSubmit={handleSubmit} noValidate>
         <input
           type="text"
           className="search-form__input"
@@ -46,6 +53,7 @@ function SearchForm({ onSearch, lastSearchQuery, changeCheckbox, checkedCheckbox
           aria-label="Найти фильмы"
         ></button>
       </form>
+     {isEmpty && (<p className='search-form__input-error'>Необходимо ввести ключевое слово</p>)}
       <FilterCheckbox checkedCheckbox={checkedCheckbox} changeCheckbox={changeCheckbox} />
     </section>
   );

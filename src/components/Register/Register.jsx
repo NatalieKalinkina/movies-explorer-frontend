@@ -4,7 +4,7 @@ import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import Logo from '../Logo/Logo';
 import './Register.css';
 
-function Register({ onRegister }) {
+function Register({ onRegister, errorMessage }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
 
   function handleSubmit(evt) {
@@ -84,6 +84,11 @@ function Register({ onRegister }) {
             Зарегистрироваться
           </button>
         </form>
+        {errorMessage && 
+        <div className='register__api-error-container'>
+          <p className="register__api-error">{errorMessage}</p>
+        </div>
+        }
         <div className="register__signin">
           <p className="register__signin-text">Уже зарегистрированы?&nbsp;</p>
           <Link to="/signin" className="register__signin-link link">
