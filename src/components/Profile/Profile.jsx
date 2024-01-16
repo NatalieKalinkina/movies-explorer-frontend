@@ -6,7 +6,7 @@ import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import './Profile.css';
 import '../Login/Login.css';
 
-function Profile({ onSignOut, onUpdateUser, errorMessage, setErrorMessage, isDisabled, setIsDisabled }) {
+function Profile({ onSignOut, onUpdateUser, errorMessage, setErrorMessage, isDisabled }) {
   const { values, handleChange, errors, isValid, setIsValid, resetForm } = useFormWithValidation();
   const currentUser = React.useContext(CurrentUserContext);
   const [name, setName] = React.useState(currentUser.name);
@@ -17,7 +17,6 @@ function Profile({ onSignOut, onUpdateUser, errorMessage, setErrorMessage, isDis
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    setIsDisabled(true);
     onUpdateUser(values);
     setPreviousName(name);
     setPreviousEmail(email);

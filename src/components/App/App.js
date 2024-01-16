@@ -52,6 +52,7 @@ function App() {
   }, [token]);
 
   const onRegister = (name, email, password) => {
+    setIsDisabled(true);
     const userPassword = password;
     mainApi
       .register(name, email, password)
@@ -61,18 +62,19 @@ function App() {
           setLoggedIn(true);
           localStorage.setItem('isLoggedIn', true);
           mainApi.authorize(res.email, userPassword);
+          setIsDisabled(false);
         } else {
           setErrorMessage('Произошла ошибка при регистрации');
         }
       })
       .catch(err => {
+        setIsDisabled(false);
         if (err === 'Ошибка: 409') {
           setErrorMessage('Пользователь с таким email уже существует.');
         } else {
           setErrorMessage('На сервере произошла ошибка.');
         }
       })
-      .finally(setIsDisabled(false));
   };
 
   const onLogin = () => {
@@ -97,13 +99,16 @@ function App() {
   };
 
   function handleUpdateUser(data) {
+    setIsDisabled(true);
     mainApi
       .postUserInfo(data)
       .then(user => {
         setCurrentUser(user);
         setErrorMessage('');
+        setIsDisabled(false);
       })
       .catch(err => {
+        setIsDisabled(false);
         if (err === 'Ошибка: 409') {
           setErrorMessage('Пользователь с таким email уже существует.');
         } else if (err === 'Ошибка: 500') {
@@ -112,7 +117,6 @@ function App() {
           setErrorMessage('При обновлении профиля произошла ошибка.');
         }
       })
-      .finally(setIsDisabled(false));
   }
 
   function handleMovieSave(movie) {

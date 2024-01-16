@@ -5,13 +5,12 @@ import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import Logo from '../Logo/Logo';
 import './Register.css';
 
-function Register({ onRegister, errorMessage, setErrorMessage, isDisabled, setIsDisabled }) {
+function Register({ onRegister, errorMessage, setErrorMessage, isDisabled }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
   const navigate = useNavigate();
 
   function handleSubmit(evt) {
     evt.preventDefault();
-    setIsDisabled(true);
     onRegister(values.name, values.email, values.password);
   }
 
