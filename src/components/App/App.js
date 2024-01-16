@@ -21,29 +21,23 @@ function App() {
   const [savedMoviesForRender, setSavedMoviesForRender] = React.useState(savedMovies);
   const [errorMessage, setErrorMessage] = React.useState('');
   const [searchMessage, setSearchMessage] = React.useState('');
-
+  const [isSaved, setIsSaved] = React.useState(false);
+  const [isDisabled, setIsDisabled] = React.useState(false);
   const navigate = useNavigate();
   const token = localStorage.getItem('jwt');
+  let isLoggedIn = JSON.parse(localStorage.getItem('isLoggedIn'));
 
   useEffect(() => {
     if (token) {
       mainApi
         .checkToken(token)
         .then(() => {
+          setLoggedIn(true);
+          localStorage.setItem('isLoggedIn', true);
+          setSearchMessage('');
           mainApi.getUserInfo().then(data => {
             setCurrentUser(data);
           });
-        })
-        .catch(console.error);
-    }
-  }, [token]);
-
-  useEffect(() => {
-    if (token) {
-      mainApi
-        .checkToken(token)
-        .then(() => {
-          setSearchMessage('');
           mainApi.getSavedMovies().then(data => {
             setSavedMovies(data.movies);
             setSavedMoviesForRender(data.movies);
@@ -55,7 +49,7 @@ function App() {
           );
         });
     }
-  }, [token, navigate]);
+  }, [token]);
 
   const onRegister = (name, email, password) => {
     const userPassword = password;
@@ -65,6 +59,7 @@ function App() {
         if (res.email) {
           navigate('/movies');
           setLoggedIn(true);
+          localStorage.setItem('isLoggedIn', true);
           mainApi.authorize(res.email, userPassword);
         } else {
           setErrorMessage('Произошла ошибка при регистрации');
@@ -76,11 +71,13 @@ function App() {
         } else {
           setErrorMessage('На сервере произошла ошибка.');
         }
-      });
+      })
+      .finally(setIsDisabled(false));
   };
 
   const onLogin = () => {
     setLoggedIn(true);
+    localStorage.setItem('isLoggedIn', true);
     navigate('/movies');
   };
 
@@ -92,7 +89,9 @@ function App() {
     localStorage.removeItem('checkbox');
     localStorage.removeItem('filteredMovies');
     localStorage.removeItem('moviesForRender');
+    localStorage.removeItem('SavedMoviesForRender');
     localStorage.removeItem('isMoreMovies');
+    localStorage.removeItem('isLoggedIn');
     setLoggedIn(false);
     navigate('/');
   };
@@ -112,36 +111,35 @@ function App() {
         } else {
           setErrorMessage('При обновлении профиля произошла ошибка.');
         }
-      });
+      })
+      .finally(setIsDisabled(false));
   }
 
   function handleMovieSave(movie) {
-    mainApi.saveMovie(movie).then(savedMovie => {
-      setSavedMoviesForRender([...savedMovies, savedMovie]);
-      setSavedMovies([...savedMovies, savedMovie]);
-    });
+    mainApi
+      .saveMovie(movie)
+      .then(savedMovie => {
+        setIsSaved(true);
+        setSavedMoviesForRender([...savedMovies, savedMovie]);
+        setSavedMovies([...savedMovies, savedMovie]);
+      })
+      .catch(err => console.error(err));
   }
 
   function handleMovieDelete(movie) {
+    if (!movie._id) {
+      const element = savedMovies.find(item => item.movieId === movie.id);
+      movie._id = element._id;
+    }
     mainApi
       .deleteSavedMovie(movie._id)
       .then(() => {
+        setIsSaved(false);
         setSavedMoviesForRender(state => state.filter(m => m._id !== movie._id));
         setSavedMovies(state => state.filter(m => m._id !== movie._id));
       })
       .catch(err => console.error(err));
   }
-
-  useEffect(() => {
-    if (token) {
-      mainApi
-        .checkToken(token)
-        .then(() => {
-          setLoggedIn(true);
-        })
-        .catch(console.error);
-    }
-  }, [token, navigate, loggedIn]);
 
   return (
     <CurrentUserContext.Provider value={currentUser}>
@@ -152,12 +150,17 @@ function App() {
           <Route
             path="/movies"
             element={
-              <ProtectedRoute loggedIn={loggedIn}>
+              <ProtectedRoute loggedIn={isLoggedIn}>
                 <Movies
                   onMovieSave={handleMovieSave}
+                  onMovieDelete={handleMovieDelete}
                   savedMovies={savedMovies}
                   searchMessage={searchMessage}
                   setSearchMessage={setSearchMessage}
+                  isDisabled={isDisabled}
+                  setIsDisabled={setIsDisabled}
+                  isSaved={isSaved}
+                  setIsSaved={setIsSaved}
                 />
               </ProtectedRoute>
             }
@@ -165,8 +168,10 @@ function App() {
           <Route
             path="/saved-movies"
             element={
-              <ProtectedRoute loggedIn={loggedIn}>
+              <ProtectedRoute loggedIn={isLoggedIn}>
                 <SavedMovies
+                  isSaved={isSaved}
+                  setIsSaved={setIsSaved}
                   savedMovies={savedMovies}
                   savedMoviesForRender={savedMoviesForRender}
                   setSavedMoviesForRender={setSavedMoviesForRender}
@@ -181,7 +186,13 @@ function App() {
               loggedIn === true ? (
                 <Navigate to="/" replace />
               ) : (
-                <Register onRegister={onRegister} errorMessage={errorMessage} />
+                <Register
+                  onRegister={onRegister}
+                  errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                  isDisabled={isDisabled}
+                  setIsDisabled={setIsDisabled}
+                />
               )
             }
           />
@@ -202,11 +213,14 @@ function App() {
           <Route
             path="/profile"
             element={
-              <ProtectedRoute loggedIn={loggedIn}>
+              <ProtectedRoute loggedIn={isLoggedIn}>
                 <Profile
                   onSignOut={onSignOut}
                   onUpdateUser={handleUpdateUser}
                   errorMessage={errorMessage}
+                  setErrorMessage={setErrorMessage}
+                  isDisabled={isDisabled}
+                  setIsDisabled={setIsDisabled}
                 />
               </ProtectedRoute>
             }

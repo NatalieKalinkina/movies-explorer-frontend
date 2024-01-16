@@ -3,9 +3,10 @@ import './SearchForm.css';
 import FilterCheckbox from '../FilterCheckbox/FilterCheckbox';
 import { useNavigate } from 'react-router-dom';
 
-function SearchForm({ onSearch, lastSearchQuery, changeCheckbox, checkedCheckbox }) {
+function SearchForm({ onSearch, lastSearchQuery, changeCheckbox, checkedCheckbox, isDisabled }) {
   const [formValue, setFormValue] = React.useState('');
   const [isEmpty, setIsEmpty] = React.useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,7 +27,7 @@ function SearchForm({ onSearch, lastSearchQuery, changeCheckbox, checkedCheckbox
 
   function handleSubmit(evt) {
     evt.preventDefault();
-       if (!formValue.text) {
+    if (!formValue.text) {
       setIsEmpty(true)
     } else {
       setIsEmpty(false);
@@ -46,14 +47,16 @@ function SearchForm({ onSearch, lastSearchQuery, changeCheckbox, checkedCheckbox
           required
           value={formValue.text || ''}
           onChange={handleChange}
+          disabled={isDisabled}
         ></input>
         <button
           type="submit"
           className="search-form__submit-button button"
           aria-label="Найти фильмы"
+          disabled={isDisabled}
         ></button>
       </form>
-     {isEmpty && (<p className='search-form__input-error'>Необходимо ввести ключевое слово</p>)}
+      {isEmpty && (<p className='search-form__input-error'>Необходимо ввести ключевое слово</p>)}
       <FilterCheckbox checkedCheckbox={checkedCheckbox} changeCheckbox={changeCheckbox} />
     </section>
   );

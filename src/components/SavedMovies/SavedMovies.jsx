@@ -30,7 +30,9 @@ function SavedMovies({ savedMovies, onMovieDelete, savedMoviesForRender, setSave
       setSavedMoviesForRender(foundSavedMovies);
     }
   }
+
   const onSearch = searchQuery => {
+    setSearchMessage('')
     setCheckedCheckbox(false);
     const searchResult = savedMovies.filter(
       movie =>
@@ -57,11 +59,11 @@ function SavedMovies({ savedMovies, onMovieDelete, savedMoviesForRender, setSave
             {savedMoviesForRender.map(movie => (
               <MoviesCard
                 key={movie.movieId}
+                id={movie.id}
                 movie={movie}
                 name={movie.nameRU}
                 image={movie.image}
                 duration={movie.duration}
-                saved={movie.saved}
                 country={movie.country}
                 director={movie.director}
                 year={movie.year}

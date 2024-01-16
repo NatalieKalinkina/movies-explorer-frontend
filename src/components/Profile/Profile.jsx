@@ -1,20 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { CurrentUserContext } from '../../contexts/CurrentUserContext.js';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import './Profile.css';
 import '../Login/Login.css';
 
-function Profile({ onSignOut, onUpdateUser, errorMessage }) {
+function Profile({ onSignOut, onUpdateUser, errorMessage, setErrorMessage, isDisabled, setIsDisabled }) {
   const { values, handleChange, errors, isValid, setIsValid, resetForm } = useFormWithValidation();
   const currentUser = React.useContext(CurrentUserContext);
   const [name, setName] = React.useState(currentUser.name);
   const [email, setEmail] = React.useState(currentUser.email);
   const [previousName, setPreviousName] = React.useState(currentUser.name);
   const [previousEmail, setPreviousEmail] = React.useState(currentUser.email);
+  const navigate = useNavigate();
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    setIsDisabled(true);
     onUpdateUser(values);
     setPreviousName(name);
     setPreviousEmail(email);
@@ -25,6 +28,10 @@ function Profile({ onSignOut, onUpdateUser, errorMessage }) {
     setName(currentUser.name);
     setEmail(currentUser.email);
   }, [currentUser]);
+
+  React.useEffect(() => {
+    setErrorMessage('');
+  }, [navigate]);
 
   React.useEffect(() => {
     if (values.name === previousName && values.email === previousEmail) {
@@ -57,6 +64,7 @@ function Profile({ onSignOut, onUpdateUser, errorMessage }) {
               required
               minLength="2"
               maxLength="30"
+              disabled={isDisabled}
             />
           </fieldset>
           <div className="profile__input-error-container">
@@ -75,6 +83,7 @@ function Profile({ onSignOut, onUpdateUser, errorMessage }) {
               value={values.email || ''}
               onChange={handleChange}
               required
+              disabled={isDisabled}
             />
           </fieldset>
           <div className="profile__input-error-container">
@@ -84,7 +93,7 @@ function Profile({ onSignOut, onUpdateUser, errorMessage }) {
             type="submit"
             className="profile__button profile__submit-button link"
             id="profile-submit-button"
-            disabled={!isValid}
+            disabled={!isValid || isDisabled}
           >
             Редактировать
           </button>

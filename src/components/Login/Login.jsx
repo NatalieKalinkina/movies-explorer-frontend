@@ -6,15 +6,22 @@ import Logo from '../Logo/Logo';
 import './Login.css';
 
 function Login({ onLogin, errorMessage, setErrorMessage }) {
-  const { values, handleChange, errors, isValid } = useFormWithValidation();
+  const { values, handleChange, errors, isValid, setIsValid } = useFormWithValidation();
+  const [isDisabled, setIsDisabled] = React.useState(false);
 
   const navigate = useNavigate();
 
+  React.useEffect(() => {
+    setErrorMessage('');
+  }, [navigate]);
+
   function handleSubmit(evt) {
     evt.preventDefault();
+    setIsDisabled(true);
     if (!values.email || !values.password) {
       return;
     }
+    setIsValid(false);
     mainApi
       .authorize(values.email, values.password)
       .then(data => {
@@ -31,7 +38,8 @@ function Login({ onLogin, errorMessage, setErrorMessage }) {
         } else {
           setErrorMessage(err)
         }
-      });
+      })
+      .finally(setIsDisabled(false));
   }
 
   return (
@@ -59,6 +67,7 @@ function Login({ onLogin, errorMessage, setErrorMessage }) {
             placeholder="Ваш e-mail"
             value={values.email || ''}
             onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="login__input-error-container">
             {errors?.email && <p className="login__input-error">{errors?.email}</p>}
@@ -75,6 +84,7 @@ function Login({ onLogin, errorMessage, setErrorMessage }) {
             placeholder="Ваш пароль"
             value={values.password || ''}
             onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="login__input-error-container">
             {errors?.password && <p className="login__input-error">{errors?.password}</p>}
@@ -83,7 +93,7 @@ function Login({ onLogin, errorMessage, setErrorMessage }) {
             type="submit"
             className="login__submit-button button"
             id="login-submit-button"
-            disabled={!isValid}
+            disabled={!isValid || isDisabled}
           >
             Войти
           </button>

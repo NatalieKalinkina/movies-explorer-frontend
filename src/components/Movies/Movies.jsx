@@ -8,7 +8,7 @@ import Footer from '../Footer/Footer';
 import { moviesApi } from '../../utils/MoviesApi';
 import { WIDTH_LAPTOP, WIDTH_MOBILE, INITIAL_AMOUNT_MOVIES_LAPTOP, INITIAL_AMOUNT_MOVIES_TABLET, INITIAL_AMOUNT_MOVIES_MOBILE, ADD_AMOUNT_MOVIES_LAPTOP, ADD_AMOUNT_MOVIES_TABLET, ADD_AMOUNT_MOVIES_MOBILE } from '../../utils/constants.js';
 
-function Movies({ onMovieSave, onMovieDelete, savedMovies, searchMessage, setSearchMessage }) {
+function Movies({ onMovieSave, onMovieDelete, savedMovies, searchMessage, setSearchMessage, isDisabled, setIsDisabled, isSaved, setIsSaved }) {
   const [foundMovies, setFoundMovies] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(false);
   const [lastSearchQuery, setLastSearchQuery] = React.useState('');
@@ -111,6 +111,7 @@ function Movies({ onMovieSave, onMovieDelete, savedMovies, searchMessage, setSea
 
   const onSearch = async searchQuery => {
     try {
+      setIsDisabled(true);
       setIsLoading(true);
       setCheckedCheckbox(false);
       setLastCheckbox(false);
@@ -140,6 +141,7 @@ function Movies({ onMovieSave, onMovieDelete, savedMovies, searchMessage, setSea
       localStorage.setItem('moviesForRender', JSON.stringify(countMovies(searchResult)));
       localStorage.setItem('searchQuery', JSON.stringify(searchQuery));
       setIsLoading(false);
+      setIsDisabled(false);
     } catch (e) {
       console.log(e);
       setSearchMessage(e);
@@ -156,6 +158,7 @@ function Movies({ onMovieSave, onMovieDelete, savedMovies, searchMessage, setSea
           lastSearchQuery={lastSearchQuery}
           checkedCheckbox={checkedCheckbox}
           changeCheckbox={changeCheckbox}
+          isDisabled={isDisabled}
         />
         {isLoading ? (
           <Preloader />

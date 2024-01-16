@@ -1,16 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import Logo from '../Logo/Logo';
 import './Register.css';
 
-function Register({ onRegister, errorMessage }) {
+function Register({ onRegister, errorMessage, setErrorMessage, isDisabled, setIsDisabled }) {
   const { values, handleChange, errors, isValid } = useFormWithValidation();
+  const navigate = useNavigate();
 
   function handleSubmit(evt) {
     evt.preventDefault();
+    setIsDisabled(true);
     onRegister(values.name, values.email, values.password);
   }
+
+  React.useEffect(() => {
+    setErrorMessage('');
+  }, [navigate]);
 
   return (
     <main className="register">
@@ -38,6 +45,7 @@ function Register({ onRegister, errorMessage }) {
             maxLength="30"
             value={values.name || ''}
             onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="register__input-error-container">
             {errors?.name && <p className="register__input-error">{errors?.name}</p>}
@@ -56,6 +64,7 @@ function Register({ onRegister, errorMessage }) {
             required
             value={values.email || ''}
             onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="register__input-error-container">
             {errors?.email && <p className="register__input-error">{errors?.email}</p>}
@@ -72,6 +81,7 @@ function Register({ onRegister, errorMessage }) {
             required
             value={values.password || ''}
             onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="register__input-error-container">
             {errors?.password && <p className="register__input-error">{errors?.password}</p>}
@@ -80,7 +90,7 @@ function Register({ onRegister, errorMessage }) {
             type="submit"
             className="register__submit-button button"
             id="register-submit-button"
-            disabled={!isValid}
+            disabled={!isValid || isDisabled}
           >
             Зарегистрироваться
           </button>

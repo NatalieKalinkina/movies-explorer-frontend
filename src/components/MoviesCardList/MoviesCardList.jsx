@@ -2,7 +2,7 @@ import React from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
 
-function MoviesCardList({ moviesForRender, saved, onMovieSave, savedMovies, isMoreMovies, onMoreMoviesOpen }) {
+function MoviesCardList({ moviesForRender, onMovieSave, onMovieDelete, savedMovies, isMoreMovies, onMoreMoviesOpen }) {
   return (
     <section className="movies-list">
       <div className="movies-list__container">
@@ -10,10 +10,10 @@ function MoviesCardList({ moviesForRender, saved, onMovieSave, savedMovies, isMo
           <MoviesCard
             key={movie.id}
             movie={movie}
+            id={movie.id}
             name={movie.nameRU}
             image={`https://api.nomoreparties.co/${movie.image.url}`}
             duration={movie.duration}
-            saved={saved}
             country={movie.country}
             director={movie.director}
             year={movie.year}
@@ -22,8 +22,9 @@ function MoviesCardList({ moviesForRender, saved, onMovieSave, savedMovies, isMo
             nameEN={movie.nameEN}
             thumbnail={`https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`}
             movieId={movie.movieId}
-            onMovieSave={onMovieSave}
             savedMovies={savedMovies}
+            onMovieSave={onMovieSave}
+            onMovieDelete={onMovieDelete}
           />
         ))}
       </div>
