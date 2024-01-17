@@ -90,7 +90,6 @@ class MainApi {
         nameEN: data.nameEN,
         thumbnail: `https://api.nomoreparties.co/${data.image.formats.thumbnail.url}`,
         movieId: data.id,
-        _id: data._id
       })
     }).then(this._checkResponse);
   }
