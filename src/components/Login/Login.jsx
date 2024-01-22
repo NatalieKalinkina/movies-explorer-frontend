@@ -1,23 +1,46 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { Link, useNavigate } from 'react-router-dom';
+import { useFormWithValidation } from '../../hooks/useFormWithValidation';
+import { mainApi } from '../../utils/MainApi';
 import Logo from '../Logo/Logo';
 import './Login.css';
 
-function Login() {
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-    reset
-  } = useForm({
-    mode: 'onBlur'
-  });
+function Login({ onLogin, errorMessage, setErrorMessage }) {
+  const { values, handleChange, errors, isValid, setIsValid } = useFormWithValidation();
+  const [isDisabled, setIsDisabled] = React.useState(false);
 
-  const onSubmit = data => {
-    console.log('данные отправлены');
-    reset();
-  };
+  const navigate = useNavigate();
+
+  React.useEffect(() => {
+    setErrorMessage('');
+  }, [navigate]);
+
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    setIsDisabled(true);
+    if (!values.email || !values.password) {
+      return;
+    }
+    setIsValid(false);
+    mainApi
+      .authorize(values.email, values.password)
+      .then(data => {
+        if (data.token) {
+          onLogin(values.email, values.password);
+          navigate('/movies', { replace: true });
+        }
+      })
+      .catch((err) => {
+        if (err === 'Ошибка: 401') {
+          setErrorMessage('Вы ввели неправильный логин или пароль.');
+        } else if (err === 'Ошибка: 500') {
+          setErrorMessage('На сервере произошла ошибка.');
+        } else {
+          setErrorMessage(err)
+        }
+      })
+      .finally(setIsDisabled(false));
+  }
 
   return (
     <main className="login">
@@ -29,7 +52,7 @@ function Login() {
           autoComplete="off"
           id="login_form-edit"
           noValidate
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit}
         >
           <label htmlFor="email" className="login__label">
             E-mail
@@ -39,19 +62,15 @@ function Login() {
             className={`login__input ${errors?.email && 'login__input_type_error'}`}
             name="email"
             id="email"
+            pattern="^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$"
+            required
             placeholder="Ваш e-mail"
-            {...register('email', {
-              required: 'Поле обязательно к заполнению',
-              pattern: {
-                value: /[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]/,
-                message: 'Адрес электронной почты должен содержать символы "@" и "."'
-              }
-            })}
+            value={values.email || ''}
+            onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="login__input-error-container">
-            {errors?.email && (
-              <p class="login__input-error">{errors?.email?.message || 'Что-то пошло не так...'}</p>
-            )}
+            {errors?.email && <p className="login__input-error">{errors?.email}</p>}
           </div>
           <label htmlFor="password" className="login__label">
             Пароль
@@ -60,28 +79,30 @@ function Login() {
             type="password"
             className={`login__input ${errors?.password && 'login__input_type_error'}`}
             name="password"
+            required
             id="password"
             placeholder="Ваш пароль"
-            {...register('password', {
-              required: 'Поле обязательно к заполнению'
-            })}
+            value={values.password || ''}
+            onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="login__input-error-container">
-            {errors?.password && (
-              <p class="login__input-error">
-                {errors?.password?.message || 'Что-то пошло не так...'}
-              </p>
-            )}
+            {errors?.password && <p className="login__input-error">{errors?.password}</p>}
           </div>
           <button
             type="submit"
             className="login__submit-button button"
             id="login-submit-button"
-            disabled={!isValid}
+            disabled={!isValid || isDisabled}
           >
             Войти
           </button>
         </form>
+        {errorMessage &&
+          <div className='login__api-error-container'>
+            <p className="login__api-error">{errorMessage}</p>
+          </div>
+        }
         <div className="login__signup">
           <p className="login__signup-text">Ещё не зарегистрированы?&nbsp;</p>
           <Link to="/signup" className="login__signup-link link">

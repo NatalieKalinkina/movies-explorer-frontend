@@ -5,25 +5,79 @@ import Footer from '../Footer/Footer';
 import '../Movies/Movies.css';
 import '../MoviesCardList/MoviesCardList.css';
 import './SavedMovies.css';
-import { savedMovies } from '../../utils/constants';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function SavedMovies() {
+function SavedMovies({ savedMovies, onMovieDelete, savedMoviesForRender, setSavedMoviesForRender }) {
+  const [checkedCheckbox, setCheckedCheckbox] = React.useState(false);
+  const [searchMessage, setSearchMessage] = React.useState('');
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setSavedMoviesForRender(savedMovies);
+  }, [navigate]);
+
+  function changeCheckbox() {
+    setCheckedCheckbox(!checkedCheckbox);
+    let foundSavedMovies = JSON.parse(localStorage.getItem('SavedMoviesForRender'));
+    if (!foundSavedMovies) {
+      foundSavedMovies = savedMovies;
+    }
+    if (checkedCheckbox === false) {
+      const filteredSavedMovies = foundSavedMovies.filter(movie => movie.duration < 40);
+      setSavedMoviesForRender(filteredSavedMovies);
+    } else {
+      setSavedMoviesForRender(foundSavedMovies);
+    }
+  }
+
+  const onSearch = searchQuery => {
+    setSearchMessage('')
+    setCheckedCheckbox(false);
+    const searchResult = savedMovies.filter(
+      movie =>
+        movie.nameRU.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        movie.nameEN.toLowerCase().includes(searchQuery.toLowerCase())
+    );
+    if (searchResult.length === 0) {
+      setSearchMessage('Фильмов не найдено');
+    }
+    setSavedMoviesForRender(searchResult);
+    localStorage.setItem('SavedMoviesForRender', JSON.stringify(searchResult));
+  };
+
   return (
     <>
       <main className="movies saved-movies">
-        <SearchForm />
+        <SearchForm
+          onSearch={onSearch}
+          checkedCheckbox={checkedCheckbox}
+          changeCheckbox={changeCheckbox}
+        />
         <div className="movies-list">
           <div className="movies-list__container">
-            {savedMovies.map(movie => (
+            {savedMoviesForRender.map(movie => (
               <MoviesCard
-                key={movie.id}
+                key={movie.movieId}
+                id={movie.id}
+                movie={movie}
                 name={movie.nameRU}
                 image={movie.image}
                 duration={movie.duration}
-                possibleToDelete={movie.saved}
+                country={movie.country}
+                director={movie.director}
+                year={movie.year}
+                description={movie.description}
+                trailerLink={movie.trailerLink}
+                nameEN={movie.nameEN}
+                thumbnail={movie.thumbnail}
+                movieId={movie.movieId}
+                onMovieDelete={onMovieDelete}
+                savedMovies={savedMovies}
               />
             ))}
           </div>
+          <p className="movies__search-message">{searchMessage}</p>
         </div>
       </main>
       <Footer />

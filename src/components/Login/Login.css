@@ -3,6 +3,7 @@
   margin: 0 auto;
   padding: 70px 0;
   box-sizing: border-box;
+  position: relative;
 }
 
 .login__container {
@@ -62,6 +63,27 @@
 }
 
 .login__input-error {
+  margin-block-start: 0;
+  margin-block-end: 0;
+  color: #ee3465;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: normal;
+  transition: 0.3s;
+}
+
+.login__api-error-container {
+  position: absolute;
+  width: 396px;
+margin-left: auto;
+margin-right: auto;
+left: 0;
+right: 0;
+bottom: 160px;
+}
+
+.login__api-error {
+  text-align: center;
   margin-block-start: 0;
   margin-block-end: 0;
   color: #ee3465;

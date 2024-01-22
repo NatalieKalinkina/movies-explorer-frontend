@@ -1,23 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router-dom';
+import { useFormWithValidation } from '../../hooks/useFormWithValidation';
 import Logo from '../Logo/Logo';
 import './Register.css';
 
-function Register() {
-  const {
-    register,
-    formState: { errors, isValid },
-    handleSubmit,
-    reset
-  } = useForm({
-    mode: 'onBlur'
-  });
+function Register({ onRegister, errorMessage, setErrorMessage, isDisabled }) {
+  const { values, handleChange, errors, isValid } = useFormWithValidation();
+  const navigate = useNavigate();
 
-  const onSubmit = data => {
-    console.log('данные отправлены');
-    reset();
-  };
+  function handleSubmit(evt) {
+    evt.preventDefault();
+    onRegister(values.name, values.email, values.password);
+  }
+
+  React.useEffect(() => {
+    setErrorMessage('');
+  }, [navigate]);
 
   return (
     <main className="register">
@@ -29,7 +28,7 @@ function Register() {
           autoComplete="off"
           id="register_form-edit"
           noValidate
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit}
         >
           <label htmlFor="name" className="register__label">
             Имя
@@ -40,24 +39,15 @@ function Register() {
             name="name"
             id="name"
             placeholder="Ваше имя"
-            {...register('name', {
-              required: 'Поле обязательно к заполнению',
-              minLength: {
-                value: 2,
-                message: 'Имя должно содержать от 2 до 30 символов'
-              },
-              maxLength: {
-                value: 30,
-                message: 'Имя должно содержать от 2 до 30 символов'
-              }
-            })}
+            required
+            minLength="2"
+            maxLength="30"
+            value={values.name || ''}
+            onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="register__input-error-container">
-            {errors?.name && (
-              <p class="register__input-error">
-                {errors?.name?.message || 'Что-то пошло не так...'}
-              </p>
-            )}
+            {errors?.name && <p className="register__input-error">{errors?.name}</p>}
           </div>
 
           <label htmlFor="email" className="register__label">
@@ -68,21 +58,15 @@ function Register() {
             className={`register__input ${errors?.email && 'register__input_type_error'}`}
             name="email"
             id="email"
+            pattern="^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[A-Za-z]+$"
             placeholder="Ваш e-mail"
-            {...register('email', {
-              required: 'Поле обязательно к заполнению',
-              pattern: {
-                value: /[a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]/,
-                message: 'Адрес электронной почты должен содержать символы "@" и "."'
-              }
-            })}
+            required
+            value={values.email || ''}
+            onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="register__input-error-container">
-            {errors?.email && (
-              <p class="register__input-error">
-                {errors?.email?.message || 'Что-то пошло не так...'}
-              </p>
-            )}
+            {errors?.email && <p className="register__input-error">{errors?.email}</p>}
           </div>
           <label htmlFor="password" className="register__label">
             Пароль
@@ -93,26 +77,28 @@ function Register() {
             name="password"
             id="password"
             placeholder="Ваш пароль"
-            {...register('password', {
-              required: 'Поле обязательно к заполнению'
-            })}
+            required
+            value={values.password || ''}
+            onChange={handleChange}
+            disabled={isDisabled}
           />
           <div className="register__input-error-container">
-            {errors?.password && (
-              <p class="register__input-error">
-                {errors?.password?.message || 'Что-то пошло не так...'}
-              </p>
-            )}
+            {errors?.password && <p className="register__input-error">{errors?.password}</p>}
           </div>
           <button
             type="submit"
             className="register__submit-button button"
             id="register-submit-button"
-            disabled={!isValid}
+            disabled={!isValid || isDisabled}
           >
             Зарегистрироваться
           </button>
         </form>
+        {errorMessage &&
+          <div className='register__api-error-container'>
+            <p className="register__api-error">{errorMessage}</p>
+          </div>
+        }
         <div className="register__signin">
           <p className="register__signin-text">Уже зарегистрированы?&nbsp;</p>
           <Link to="/signin" className="register__signin-link link">

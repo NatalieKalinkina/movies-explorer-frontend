@@ -1,24 +1,34 @@
 import React from 'react';
 import MoviesCard from '../MoviesCard/MoviesCard';
 import './MoviesCardList.css';
-import { movies } from '../../utils/constants';
 
-function MoviesCardList() {
+function MoviesCardList({ moviesForRender, onMovieSave, onMovieDelete, savedMovies, isMoreMovies, onMoreMoviesOpen }) {
   return (
     <section className="movies-list">
       <div className="movies-list__container">
-        {movies.map(movie => (
+        {moviesForRender.map(movie => (
           <MoviesCard
             key={movie.id}
+            movie={movie}
+            id={movie.id}
             name={movie.nameRU}
-            image={movie.image}
+            image={`https://api.nomoreparties.co/${movie.image.url}`}
             duration={movie.duration}
-            possibleToSave={movie.possibleToSave}
-            saved={movie.saved}
+            country={movie.country}
+            director={movie.director}
+            year={movie.year}
+            description={movie.description}
+            trailerLink={movie.trailerLink}
+            nameEN={movie.nameEN}
+            thumbnail={`https://api.nomoreparties.co/${movie.image.formats.thumbnail.url}`}
+            movieId={movie.movieId}
+            savedMovies={savedMovies}
+            onMovieSave={onMovieSave}
+            onMovieDelete={onMovieDelete}
           />
         ))}
       </div>
-      <button className="movies-list__button button">Ещё</button>
+      {isMoreMovies && (<button className="movies-list__button button" onClick={onMoreMoviesOpen}>Ещё</button>)}
     </section>
   );
 }
