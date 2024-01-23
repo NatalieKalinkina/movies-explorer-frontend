@@ -2,6 +2,10 @@
 
 ***Дипломная работа от Яндекс Практикум***
 
+ ## 🌏 Ссылки:
+* [Деплой](https://nk.movies.nomoredomainsmonster.ru/)
+* [Репозиторий бэкенда](https://github.com/NatalieKalinkina/movies-explorer-api)
+
 ## Описание проекта:
 Movies Explorer - SPA, где пользователи могут искать фильмы по ключевым словам, сохранять их и удалять из избранного.
 
@@ -36,10 +40,6 @@ npm install
 ```
 npm run start
 ```
-
-  ## 🌏 Ссылки:
-* [Frontend](https://nk.movies.nomoredomainsmonster.ru/)
-* [Backend](https://api.nk.movies.nomoredomainsmonster.ru/)
 
 [Макет](<https://www.figma.com/file/XaHV4KPh6mycADj75OUjUj/%D0%94%D0%B8%D0%BF%D0%BB%D0%BE%D0%BC%D0%BD%D1%8B%D0%B9-%D0%BF%D1%80%D0%BE%D0%B5%D0%BA%D1%82-(Copy)?node-id=1%3A8157&mode=dev>)
 
