@@ -10,7 +10,7 @@ function AboutMe() {
       <div className="student__container">
         <div className="student__text-column">
           <h3 className="student__name">Наталья</h3>
-          <h4 className="student__job">Фронтенд-разработчица, 29 лет</h4>
+          <h4 className="student__job">Фронтенд-разработчица, 30 лет</h4>
           <p className="student__text">
             Живу в&nbsp;Тольятти, закончила Тольяттинскую академию управления. Воспитываю маленькую
             дочь и&nbsp;мини-пуделя. Научилась шить по&nbsp;роликам на&nbsp;YouTube, катаюсь
