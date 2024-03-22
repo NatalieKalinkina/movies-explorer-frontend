@@ -84,16 +84,7 @@ function App() {
   };
 
   const onSignOut = () => {
-    localStorage.removeItem('jwt');
-    localStorage.removeItem('allMovies');
-    localStorage.removeItem('foundMovies');
-    localStorage.removeItem('searchQuery');
-    localStorage.removeItem('checkbox');
-    localStorage.removeItem('filteredMovies');
-    localStorage.removeItem('moviesForRender');
-    localStorage.removeItem('SavedMoviesForRender');
-    localStorage.removeItem('isMoreMovies');
-    localStorage.removeItem('isLoggedIn');
+    localStorage.clear()
     setLoggedIn(false);
     navigate('/');
   };
