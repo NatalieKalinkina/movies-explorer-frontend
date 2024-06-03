@@ -6,6 +6,8 @@
 * [Деплой](https://movies-explorer-frontend-3syg.onrender.com/)  
   >Для авторизации в приложении можно использовать тестовые данные:\
   >email: admin@test.ru, пароль: adminpwd
+
+  Первая авторизация занимает время - прошу понять и простить :)
 * [Репозиторий бэкенда](https://github.com/NatalieKalinkina/movies-explorer-api)
 
 ## Описание проекта:
